@@ -3,6 +3,7 @@ const multer = require("multer");
 const fs = require("fs");
 const allowedExtensions = [".jpg", ".jpeg", ".png"];
 const { Image, Tag, sequelize, Like } = require("../models");
+const { boolean } = require("joi");
 require("dotenv").config();
 
 const storage = multer.diskStorage({
@@ -110,12 +111,30 @@ class ImageController {
         await t.rollback();
       }
       res.status(500).json({
-        message: `Could not upload the file: ${
-          req.file ? req.file.originalname : "Unknown File"
-        }. ${err}`,
+        message: `Could not upload the file: ${req.file ? req.file.originalname : "Unknown File"
+          }. ${err}`,
       });
     }
   }
+
+  static async cekUserIsLike(req, res) {
+    try {
+      const { imageId } = req.params;
+      const { id } = req.userLogged;
+      const likesAlready = await Like.findOne({
+        where: { user_id: id, image_id: imageId },
+      });
+
+      if (likesAlready) {
+        return res.status(200).json({ message: 'already', data: true })
+      } else {
+        return res.status(200).json({ message: 'Not yet', data: false })
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
 
   static async likeImage(req, res) {
     try {
@@ -131,9 +150,6 @@ class ImageController {
         where: { user_id: id, image_id: imageId },
       });
 
-      console.log(await likesAlready);
-
-      console.log(id);
       if (likesAlready) {
         return res.status(400).json({ message: "You already like this image" });
       } else {
