@@ -25,6 +25,26 @@ const storage = multer.diskStorage({
 const uploadMiddleware = multer({ storage: storage }).single("image");
 
 class ImageController {
+  static async getImgeByUserId(req, res) {
+    try {
+      const { id } = req.userLogged
+      const data = await Image.findAll({
+        where: { user_id: id }, include: [
+          {
+            model: Tag,
+          },
+        ],
+      })
+      if (data) {
+        res.status(200).json({ data })
+      } else {
+        res.status(404).json({ message: 'Not Found' })
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   static async getAllPost(req, res) {
     try {
       const posts = await Image.findAll({

@@ -9,6 +9,8 @@ router.post("/create-post", authentication, ImageController.createPostImage);
 router.delete("/delete-post/:imageId", authentication, ImageController.deletePost);
 router.post("/like/:imageId", authentication, ImageController.likeImage);
 router.delete("/unlike/:imageId", authentication, ImageController.unlikeImage);
-router.get('/cek-like/:imageId', authentication,ImageController.cekUserIsLike)
+router.get('/cek-like/:imageId', authentication, ImageController.cekUserIsLike)
+// untuk my image:
+router.get('/my-images', authentication, ImageController.getImgeByUserId);
 
 module.exports = router;
