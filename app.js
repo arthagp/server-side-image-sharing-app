@@ -15,6 +15,10 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(morgan("tiny"));
 app.use(router);
 
+app.get('/get', (req, res) => {
+  res.status(200).send('Berhasil Masuk')
+})
+
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

@@ -3,7 +3,6 @@ const multer = require("multer");
 const fs = require("fs");
 const allowedExtensions = [".jpg", ".jpeg", ".png"];
 const { Image, Tag, sequelize, Like } = require("../models");
-const { boolean } = require("joi");
 require("dotenv").config();
 
 const storage = multer.diskStorage({
@@ -227,7 +226,7 @@ class ImageController {
   static async updatePostImage(req, res) {
     let t = await sequelize.transaction();
     try {
-      const { imageId } = req.params; // Assuming you're passing the imageId in the URL
+      const { imageId } = req.params;
       const { caption, location, tagsId } = req.body;
       const image = await Image.findByPk(imageId, { transaction: t });
 
